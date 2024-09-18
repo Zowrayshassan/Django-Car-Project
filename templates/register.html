@@ -1,0 +1,73 @@
+{% load static %}
+
+<style>
+   
+    body {
+        background-image: url("{% static 'images/background.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 0;
+    }
+    .form-container {
+        width: 300px; 
+        margin-left : 415px;
+        margin-top : 15px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: black; 
+    }
+    .form-container input[type="text"],
+    .form-container input[type="email"]  {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #333;
+        color: white;
+    }
+
+
+    .form-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .form-container button:hover {
+        background-color: #45a049;
+    }
+    .form-container p {
+        color: white;
+    }
+    p{
+        color : red;
+    }
+</style>
+<div class="form-container">
+    <form action="{% url 'register' %}" method="POST">
+        {% csrf_token %}
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+        <p>Username:</p>
+        <input type="text" name="username" id="username" required>
+        
+        <p>Email:</p>
+        <input type="email" name="email" id="email" required>
+        
+        <p>Password:</p>
+        <input type="text" name="password" id="password" required>
+        
+        <p>Repeat Password:</p>
+        <input type="text" name="repeatpassword" id="repeatpassword" required>
+        
+        <button type="submit">Register</button>
+    </form>
+</div>

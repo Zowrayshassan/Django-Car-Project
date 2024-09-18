@@ -1,0 +1,77 @@
+{% load static %}
+
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
+
+<style>
+    body {
+        background-image: url("{% static 'images/background.jpg' %}");
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat; 
+        margin: 0;
+        padding: 0;
+    }
+    .form-container {
+        width: 300px; 
+        margin-left: 405px;
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: black;
+    }
+    .form-container a {
+        color: #fff;
+    }
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin: 1px auto;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #333;
+        color: white;
+    }
+    .form-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 30px;
+    }
+    .form-container button:hover {
+        background-color: #45a049;
+    }
+    .form-container a:hover {
+        text-decoration: underline;
+    }
+    .form-container p {
+        color: white;
+    }
+</style>
+
+<div class="form-container">
+    <form action="{% url 'edit' car.id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Car Name:</p>
+        <input type="text" name="name" id="name" value="{{ car.name }}">
+
+        <p>Car Model:</p>
+        <input type="text" name="model" id="model" value="{{ car.model }}">
+
+        <p>Car Price:</p>
+        <input type="number" name="price" id="price" value="{{ car.price }}">
+ 
+        <p>Car Image:</p>
+        <input type="file" id="car_image" name="car_image" accept="image/*">
+
+        <button type="submit">Update</button>
+    </form>
+</div>

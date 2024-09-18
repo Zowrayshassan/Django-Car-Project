@@ -1,0 +1,219 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Car Rental System</title>
+    <style>
+        html, body {
+            overflow-x: hidden; 
+            height: 100%;        
+        }
+        *{
+            margin: 0px;
+            padding : 0px;
+            box-sizing: border-box;
+        }
+        h2,p{
+            color : white;
+        }
+        body{
+            background-image : url("{% static 'images/background.jpg' %}");
+            background-size: cover;
+            background-position: center 40px 20px 0px 0px ; /* Centered horizontally and 20px down vertically */
+            background-repeat: no-repeat;
+        }
+        header{
+            background-color : black;
+            color : white;
+            display : flex ;
+            font-family  : monospace;
+            font-size : 17px;
+        }
+        .container
+        {
+                border-radius : 5px;
+                display : flex;
+                justify-content : flex-start;
+                flex-wrap : wrap;
+                margin-left:400px;
+                margin-top : 30px;
+                gap : 5px;
+        }
+        .container button{
+            width : 100px;
+            height : 30px;
+            border-radius : 5px;
+        }
+        .logo img{
+           margin-left : 10px;
+           margin-top : 15px 
+        }
+        .heading {
+            margin : 22px;
+        }
+   
+        .main1 {
+            display:flex;
+            flex-wrap:wrap;
+            justify-content : center;
+            gap : 30px;
+            margin-top : 20px;
+        }
+            .main1 img{
+                height : 210px;
+                width : 230px;
+                margin-top : 20px;
+                border-radius : 15px;
+                transition: transform 0.3s ease-in-out;             
+            }
+            .main1 img:hover {
+                transform: scale(1.1); /* Enlarges the image on hover */
+            }
+            .delete-btn{
+                
+            }
+      
+        .options:hover{
+            transform: scale(1.1);  
+        }
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .image-container img {
+            height: 210px;
+            width: 230px;
+            margin-top: 20px;
+            border-radius: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .image-container img:hover {
+            transform: scale(1.1);
+        }
+        .delete-btn {
+            position: absolute;
+            top: 20px;
+            right:180px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 50%;
+            opacity: 0; 
+            transition: opacity 0.3s ease-in-out;
+            cursor: pointer;
+        } 
+        .edit-btn{
+            position: absolute;
+            top: 20px;  
+            right:150px;
+            background-color: black; 
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 50%;
+            opacity: 0; 
+            transition: opacity 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .add-btn{
+            position: absolute;
+            top: 20px; 
+            background-color: green; 
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 50%;
+            opacity: 0; 
+            transition: opacity 0.3s ease-in-out;
+            cursor: pointer;
+        }
+      
+        .image-container:hover .delete-btn, 
+        .image-container:hover .edit-btn,
+        .image-container:hover .add-btn
+         {
+            opacity: 1; 
+        }
+        
+        h6{
+            color : white ;
+        }
+        p{
+            white;
+        }
+    </style>
+</head>
+<body>
+    {% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
+    <header>
+        <div class = "logo"><img src="{% static 'images/img.png' %}" alt="" width = " 60px" height = "60px"></div>
+        <div class = "heading">
+            <h1>Welcome To Z Autos</h1>
+        </div>
+        <div class="container">
+            {% if user.is_authenticated %}
+         <div class = "box1">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class = "login">Logout</button>
+            </form>
+         </div>
+            {% else %}
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class = "login">Login</button>
+            </form>
+         <div class = "box2">
+            <form action="{% url 'register' %}" method="get">
+                {% csrf_token %}
+                <button type="submit" class = "login">register</button>
+            </form>
+         </div>
+         {% endif %}
+        </div>   
+    </header>
+    <section>
+    <div class="main1">
+        {% for car in features %}
+        <div class="car-item">
+                {% if car.car_image %}
+                <div class = "image-container">
+                <img src="{{ car.car_image.url }}" alt="{{ car.name }}"class = "main" >
+                <form action="{% url 'delete_car' car.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                </form>
+                <form action="{% url 'edit' car.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="edit-btn"><i class="fa-regular fa-pen-to-square"></i></button>
+                </form> 
+            <form action="{% url 'add_car' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class = "add-btn"><i class="fa-solid fa-plus"></i></button>
+            </form>
+        </div>
+            {% endif %}
+           
+            <h2>{{ car.name }}</h2>
+            <p>Model: {{ car.model }}</p>
+            <p>Price: ${{ car.price }}</p>
+            </div>
+        {% empty %}
+            <p>No cars available.</p>
+            <form action="{% url 'add_car' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class = "add"><i class="fa-solid fa-plus"></i></button>
+            </form>
+        {% endfor %}
+    </div>
+    </section>
+</body>
+</html> 
